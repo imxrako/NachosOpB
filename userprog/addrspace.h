@@ -31,11 +31,14 @@ class AddrSpace {
     void SaveState();			// Save/restore address space-specific
     void RestoreState();		// info on a context switch 
 
+   AddrSpace(OpenFile *executable,char *nombresito); //--------------------Modificacion
+
   private:
     TranslationEntry *pageTable;	// Assume linear page table translation
 					// for now!
     unsigned int numPages;		// Number of pages in the virtual 
 					// address space
+    OpenFile *archivito;		//Archivo con informacion del ejecutable sin la cabecera -----------MODIFICACION-------
 };
 
 #endif // ADDRSPACE_H

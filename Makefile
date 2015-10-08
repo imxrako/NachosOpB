@@ -21,5 +21,5 @@ all:
 
 # don't delete executables in "test" in case there is no cross-compiler
 clean:
-	/bin/bash -c "rm -f DISK */{halt,matmult,sort,shell,core,nachos,DISK,*.o,swtch.s,*.coff} test/{*.coff} bin/{coff2flat,coff2noff,disassemble,out}"
+	/bin/bash -c "rm -f DISK */{halt,matmult,sort,shell,core,nachos,DISK,*.o,swtch.s,*.coff,*.swp} test/{*.coff} bin/{coff2flat,coff2noff,disassemble,out}"
 

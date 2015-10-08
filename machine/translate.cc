@@ -205,9 +205,11 @@ Machine::Translate(int virtAddr, int* physAddr, int size, bool writing)
 
 // calculate the virtual page number, and offset within the page,
 // from the virtual address
+    printf("Direccion logica: %d \n",virtAddr);//---------------------------Modificado aqui mero
     vpn = (unsigned) virtAddr / PageSize;
+    printf("Numero de pagina: %d \n",vpn);//------------------------------Modificado aqui mero
     offset = (unsigned) virtAddr % PageSize;
-    
+    printf("Desplazamiento: %d \n",offset);//-----------------------------Modificado aqui mero
     if (tlb == NULL) {		// => page table => vpn is index into table
 	if (vpn >= pageTableSize) {
 	    DEBUG('a', "virtual page # %d too large for page table size %d!\n", 
@@ -249,6 +251,7 @@ Machine::Translate(int virtAddr, int* physAddr, int size, bool writing)
     if (writing)
 	entry->dirty = TRUE;
     *physAddr = pageFrame * PageSize + offset;
+     printf("Direccion fisica: %d\n",*physAddr);//-------------------Modificado aqui mero
     ASSERT((*physAddr >= 0) && ((*physAddr + size) <= MemorySize));
     DEBUG('a', "phys addr = 0x%x\n", *physAddr);
     return NoException;
