@@ -38,7 +38,7 @@ class AddrSpace {
 					// for now!
     unsigned int numPages;		// Number of pages in the virtual 
 					// address space
-    OpenFile *archivito;		//Archivo con informacion del ejecutable sin la cabecera -----------MODIFICACION-------
+//    OpenFile *archivito;		//Archivo con informacion del ejecutable sin la cabecera -----------MODIFICACION-------
 };
 
 #endif // ADDRSPACE_H

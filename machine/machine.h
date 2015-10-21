@@ -106,6 +106,7 @@ class Instruction {
 
 class Machine {
   public:
+int numMarco;
     Machine(bool debug);	// Initialize the simulation of the hardware
 				// for running user programs
     ~Machine();			// De-allocate the data structures

@@ -401,7 +401,7 @@ exception.o: ../userprog/exception.cc ../threads/copyright.h \
  ../threads/list.h ../machine/stats.h ../machine/timer.h \
  ../filesys/synchdisk.h ../machine/disk.h ../threads/synch.h \
  ../network/post.h ../machine/network.h ../threads/synchlist.h \
- ../threads/synch.h ../userprog/syscall.h
+ ../threads/synch.h ../userprog/syscall.h ../userprog/addrspace.h
 progtest.o: ../userprog/progtest.cc ../threads/copyright.h \
  ../threads/system.h ../threads/copyright.h ../threads/utility.h \
  ../machine/sysdep.h /usr/include/stdio.h /usr/include/features.h \

@@ -1,14 +1,8 @@
-Se incluye modificaciones en
+tercera entrega 
 
-	machine/translate.cc
-	userprog/addrspace.cc
-	userprog/addrspace.h
-	userprog/progtest.cc
+Asigna marcos a las paginas para cargarlos a la memoria
 
+Halt es el unico que funciona porque solo hace 3 fallos
 
-imprime informacion de la memoria y las paginas y crea un archivo en userprog que tiene de informacion
-el codigo y los datos del ejecutable sin la cabecera
-
-hexdump halt.swp //comando para imprimir la informacion del archivo creado del progama halt
-
-hexdump -s 40 ../test/halt // comando para imprimir la informacion del programa halt
+nachos tiene 32 marcos disponibles por los los demás programas no los puede cargar pero genera
+los primeros fallos(32)

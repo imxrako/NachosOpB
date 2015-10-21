@@ -28,6 +28,7 @@
 					// See definitions listed under #else
 class OpenFile {
   public:
+OpenFile *archivito;
     OpenFile(int f) { file = f; currentOffset = 0; }	// open the file
     ~OpenFile() { Close(file); }			// close the file
 

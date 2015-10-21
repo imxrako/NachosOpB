@@ -207,9 +207,10 @@ Machine::Translate(int virtAddr, int* physAddr, int size, bool writing)
 // from the virtual address
     printf("Direccion logica: %d \n",virtAddr);//---------------------------Modificado aqui mero
     vpn = (unsigned) virtAddr / PageSize;
-    printf("Numero de pagina: %d \n",vpn);//------------------------------Modificado aqui mero
     offset = (unsigned) virtAddr % PageSize;
     printf("Desplazamiento: %d \n",offset);//-----------------------------Modificado aqui mero
+    printf("\nNumero de pagina: %d\n",vpn);//------------------------------Modificado aqui mero
+
     if (tlb == NULL) {		// => page table => vpn is index into table
 	if (vpn >= pageTableSize) {
 	    DEBUG('a', "virtual page # %d too large for page table size %d!\n", 
@@ -220,7 +221,9 @@ Machine::Translate(int virtAddr, int* physAddr, int size, bool writing)
 			virtAddr, pageTableSize);
 	    return PageFaultException;
 	}
+	
 	entry = &pageTable[vpn];
+//	printf("pageFrame: %d,NumPhysPages: %d\n",entry->physicalPage,NumPhysPages);//------MODIFICAICON
     } else {
         for (entry = NULL, i = 0; i < TLBSize; i++)
     	    if (tlb[i].valid && (tlb[i].virtualPage == vpn)) {

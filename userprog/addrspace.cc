@@ -88,7 +88,7 @@ AddrSpace::AddrSpace(OpenFile *executable)
     for (i = 0; i < numPages; i++) {
 	pageTable[i].virtualPage = i;	// for now, virtual page # = phys page #
 	pageTable[i].physicalPage = i;
-	pageTable[i].valid = TRUE;
+	pageTable[i].valid = TRUE; 
 	pageTable[i].use = FALSE;
 	pageTable[i].dirty = FALSE;
 	pageTable[i].readOnly = FALSE;  // if the code segment was entirely on 
@@ -125,7 +125,10 @@ AddrSpace::AddrSpace(OpenFile *executable,char *nombresito)
     int ii=0;
     int j=0;
     int d=0;
-    //int *buffer;		
+    //int *buffer;	
+	
+
+
     executable->ReadAt((char *)&noffH, sizeof(noffH), 0);
     if ((noffH.noffMagic != NOFFMAGIC) && 
 		(WordToHost(noffH.noffMagic) == NOFFMAGIC))
@@ -137,12 +140,13 @@ AddrSpace::AddrSpace(OpenFile *executable,char *nombresito)
     size = noffH.code.size + noffH.initData.size + noffH.uninitData.size 
 			+ UserStackSize;	// we need to increase the size
 						// to leave room for the stack
-    printf(" tamanio del proceso: %d bytes\n",size);//-----------------------------------------------------Modificado aqui mero 
+    printf("\ntamaño del proceso: %d bytes\n",size);//-----------------------------------------------------Modificado aqui mero 
 					
     numPages = divRoundUp(size, PageSize);
 	
     printf(" numero de paginas: %d \n",numPages);//-----------------------------------------------------Modificado aqui mero 
     size = numPages * PageSize;//-----------------------------------------------------Modificado aqui mero 
+printf(" tamaño de pagina: %d \n\n",PageSize);
 
     /*/////////////////////// para quitar la ruta del archivo y dejar solamente el nombre  
     *////////////////////////////////////////////////////////////////////////////////////
@@ -165,7 +169,8 @@ AddrSpace::AddrSpace(OpenFile *executable,char *nombresito)
     
     /* Crea un archivo con el nombre del proceso a ejecutar y una extension .swp */
     fileSystem->Create(strcat(nombre,".swp"),size);
-    archivito=fileSystem->Open(nombre);
+//    archivito=fileSystem->Open(nombre);
+	fileSystem->archivito=fileSystem->Open(nombre);
     /* Crea un arreglo de caracteres del tamaño	del código y los datos */
     char buffer[noffH.code.size+noffH.initData.size];
 
@@ -174,8 +179,8 @@ AddrSpace::AddrSpace(OpenFile *executable,char *nombresito)
     /* Copia en el arreglo los datos que se encuentran en el ejecutable */
     executable->ReadAt(&(buffer[noffH.code.size]),noffH.initData.size,noffH.initData.inFileAddr);
     /*escribe en el archivo creado con extension .swp el arreglo que contiene los datos leidos*/
-    archivito->WriteAt((char*)buffer,noffH.code.size+noffH.initData.size,0);
-    ASSERT(numPages <= NumPhysPages);		// check we're not trying
+    fileSystem->archivito->WriteAt((char*)buffer,noffH.code.size+noffH.initData.size,0);
+//    ASSERT(numPages <= NumPhysPages);		// check we're not trying
 						// to run anything too big --
 						// at least until we have
 						// virtual memory
@@ -186,21 +191,15 @@ AddrSpace::AddrSpace(OpenFile *executable,char *nombresito)
     pageTable = new TranslationEntry[numPages];
     for (i = 0; i < numPages; i++) {
 	pageTable[i].virtualPage = i;	// for now, virtual page # = phys page #
-	//printf("Pagina virtual: %d \n",i);//---------------------------------------------------------Modificado aqui mero
 	pageTable[i].physicalPage = i;
-	//printf("Pagina fisica: %d \n",i);//---------------------------------------------------------Modificado aqui mero
-	pageTable[i].valid = TRUE;
-	//printf(pageTable[i].valid ? "valido: true \n" : "valido: false \n");//---------------------------------Modificado aqui mero
+	pageTable[i].valid = FALSE;
 	pageTable[i].use = FALSE;
-	//printf(pageTable[i].use ? "uso: true \n" : "uso: false \n");//----------------------------------Modificado aqui mero
 	pageTable[i].dirty = FALSE;
-	//printf(pageTable[i].dirty ? "dirty: true \n" : "dirty: false \n");//---------------------------Modificado aqui mero
-	pageTable[i].readOnly = FALSE;  // if the code segment was entirely on 
-	//printf(pageTable[i].readOnly ? "solo lectura: true \n" : "solo lectura: false \n");//---------------------Modificado aqui mero	
+	pageTable[i].readOnly = FALSE;  // if the code segment was entirely on  mero	
 	//printf("\n");		// a separate page, we could set its 
 					// pages to be read-only
     }
-    
+/*    
 // zero out the entire address space, to zero the unitialized data segment 
 // and the stack segment
     bzero(machine->mainMemory, size);
@@ -218,8 +217,10 @@ AddrSpace::AddrSpace(OpenFile *executable,char *nombresito)
         executable->ReadAt(&(machine->mainMemory[noffH.initData.virtualAddr]),
 			noffH.initData.size, noffH.initData.inFileAddr);
     }
-
+*/
 }
+
+
 
 //----------------------------------------------------------------------
 // AddrSpace::~AddrSpace

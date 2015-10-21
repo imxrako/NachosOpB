@@ -32,6 +32,7 @@ StartProcess(char *filename)
     }
 //    space = new AddrSpace(executable);
 
+
       space = new AddrSpace(executable,filename); //------MODIFICACION
 
     currentThread->space = space;

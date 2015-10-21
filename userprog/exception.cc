@@ -24,6 +24,11 @@
 #include "copyright.h"
 #include "system.h"
 #include "syscall.h"
+#include "machine.h"
+#include "syscall.h"
+#include "addrspace.h"
+#include "stats.h"
+
 
 //----------------------------------------------------------------------
 // ExceptionHandler
@@ -48,16 +53,40 @@
 //	are in machine.h.
 //----------------------------------------------------------------------
 
+//Agarra la excepcion generada
 void
 ExceptionHandler(ExceptionType which)
 {
     int type = machine->ReadRegister(2);
+	int r,numPag;
+	int dirFis;
+	char *dat = new char[PageSize];
 
     if ((which == SyscallException) && (type == SC_Halt)) {
 	DEBUG('a', "Shutdown, initiated by user program.\n");
    	interrupt->Halt();
-    } else {
+    }
+	else if(which == PageFaultException) // si la excepción fue un fallo de página
+	{
+//		ASSERT(machine->numMarco < NumPhysPages); //para que siga miprimiendo las paginas usadas hasta el fallo 33
+			r = machine->ReadRegister(BadVAddrReg);	// Lee en el registro la dirección lógica en la que se generó el fallo
+			numPag = (unsigned) r / PageSize; // obtiene el número de página
+			fileSystem->archivito->ReadAt(dat,PageSize,numPag*PageSize); //Lee en el archivo de intercambio el bloque a guardar en la memoria principal
+			for(int i=0;i<PageSize;i++) // Recorrido para leer la información y guardarlo poco a poco
+			{
+				dirFis = (machine->numMarco*PageSize)+i; //se obtiene la dirección física
+				machine->mainMemory[dirFis]=dat[i]; // se guarda en la memoria principal
+			}
+			// Se actualiza la información de la página
+			machine->pageTable[numPag].valid=TRUE; // Indica que esta cargado
+			machine->pageTable[numPag].physicalPage=machine->numMarco++; // En este caso el número de marco es igual al numero de pagina por la inicialización en addrSpace
+			stats->numPageFaults=machine->numMarco;
+			printf("\n---------Fallo  #%d------------\n\n",stats->numPageFaults);
+			ASSERT(machine->numMarco < NumPhysPages);
+	}
+	else {
 	printf("Unexpected user mode exception %d %d\n", which, type);
 	ASSERT(FALSE);
     }
+	delete dat;
 }
